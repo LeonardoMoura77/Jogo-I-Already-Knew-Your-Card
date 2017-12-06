@@ -19,9 +19,9 @@ public class ControllerCarta {
 
 	}
 
-	public JLabel getCarta(int width, int height) {
+	public JLabel getCarta(int linha, int coluna) {
 
-		return pacote.getImagem(width, height);
+		return pacote.getImagem(linha, coluna);
 
 	}
 

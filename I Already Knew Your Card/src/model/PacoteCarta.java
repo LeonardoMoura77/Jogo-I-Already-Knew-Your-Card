@@ -17,27 +17,31 @@ public class PacoteCarta {
 	public void carregaPacote() {
 
 		int numeroCarta = 0, auxPosicao = 0;
-		int vetor[] = new int[21];
+		int cartasEscolhidas[] = new int[21];
 		boolean procura;
 
 		for (int linha = 0; linha < 3; linha++) {
 
 			for (int coluna = 0; coluna < 7; coluna++) {
+				
 				procura = true;
+				
 				while (procura) {
 
 					numeroCarta = (int) (Math.random() * 52);
 					int aux = 0;
 
-					for (int k = 0; k < vetor.length; k++) {
+					for (int k = 0; k < cartasEscolhidas.length; k++) {
 
-						if (numeroCarta != vetor[k])
+						if (numeroCarta != cartasEscolhidas[k])
 							aux++;
 
 						if (aux == 21) {
+							
 							procura = false;
-							vetor[auxPosicao] = numeroCarta;
+							cartasEscolhidas[auxPosicao] = numeroCarta;
 							auxPosicao++;
+							
 						}
 
 					}
@@ -65,23 +69,32 @@ public class PacoteCarta {
 				pacoteAux[j][i] = pacote[linha][coluna];
 
 				if (coluna == 6) {
+					
 					coluna = 0;
 
 					if (linha == 2) {
+						
 						linha = 0;
+						
 					} else {
+						
 						linha++;
+						
 					}
 
 				} else {
+					
 					coluna++;
+					
 				}
 
 				if (linha != linhaSelecionada) {
 
 					if (pacote[linha][coluna].getPossivelCarta() == true) {
+						
 						pacote[linha][coluna].setPossivelCarta(false);
 						qtdPossiveisCartas--;
+						
 					}
 
 				}

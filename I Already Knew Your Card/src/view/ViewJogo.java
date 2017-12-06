@@ -19,15 +19,15 @@ public class ViewJogo implements ActionListener {
 	private int passo = 1;
 
 	JFrame frame = new JFrame("I ALREADY KNEW YOUR CARD");
-
 	JPanel painelPrincipal = new JPanel(new BorderLayout());
 
+	// Componentes do Menu
 	JPanel painelInferior = new JPanel(new BorderLayout());
 	JPanel painelMenu = new JPanel();
 	JButton btnIniciarJogo = new JButton("Iniciar Jogo");
 	JButton btnSair = new JButton("Sair");
-	JLabel Logo;
 
+	// Componentes do Jogo
 	JPanel painelMensagem = new JPanel();
 	JLabel lblMensagem = new JLabel("Memorize uma carta e diga sua fileira");
 	JPanel painelCartas = new JPanel(new GridLayout(3, 1));
@@ -38,6 +38,7 @@ public class ViewJogo implements ActionListener {
 	JPanel painelFileira3 = new JPanel();
 	JButton btnFileira3 = new JButton("Fileira 3");
 
+	// Componentes do Resultado
 	JPanel painelResultado = new JPanel(new BorderLayout());
 	JPanel painelMensagemResultado = new JPanel();
 	JLabel lblMensagemResultado = new JLabel("Está é a sua carta?");
@@ -54,6 +55,7 @@ public class ViewJogo implements ActionListener {
 
 		carregaPainelResultado();
 
+		// Carrega painel do Menu
 		btnIniciarJogo.setFont(new Font("Arial", Font.PLAIN, 20));
 		btnSair.setFont(new Font("Arial", Font.PLAIN, 20));
 		painelMenu.add(btnIniciarJogo);
@@ -65,14 +67,11 @@ public class ViewJogo implements ActionListener {
 
 		btnIniciarJogo.addActionListener(this);
 		btnSair.addActionListener(this);
-
 		btnFileira1.addActionListener(this);
 		btnFileira2.addActionListener(this);
 		btnFileira3.addActionListener(this);
-
 		btnSim.addActionListener(this);
 		btnNao.addActionListener(this);
-
 		btnTentarNovamente.addActionListener(this);
 		btnFechar.addActionListener(this);
 
@@ -84,74 +83,63 @@ public class ViewJogo implements ActionListener {
 
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void carregaPainelJogo() {
 
-		String cmd = e.getActionCommand();
+		ctrCarta.inicializarNovoPacote();
+		lblMensagem.setFont(new Font("Arial", Font.BOLD, 28));
+		painelMensagem.add(lblMensagem);
 
-		if ("Fileira 1".equals(cmd)) {
-			ctrCarta.reorganizarPacote(0);
+		carregaPaineisFileira();
 
-			if (ctrCarta.getPossiveisCartas() == 1) {
-				repaintResultado(0);
-				repaintPainelOpcao(2);
-			} else if (ctrCarta.getPossiveisCartas() == 0) {
-				repaintResultado(3);
-				repaintPainelOpcao(1);
-			} else {
-				passo++;
-				repaintMensagem(passo);
-				repaintFileiras();
-			}
+		painelCartas.add(painelFileira1);
+		painelCartas.add(painelFileira2);
+		painelCartas.add(painelFileira3);
 
-		} else if ("Fileira 2".equals(cmd)) {
-			ctrCarta.reorganizarPacote(1);
+	}
 
-			if (ctrCarta.getPossiveisCartas() == 1) {
-				repaintResultado(0);
-				repaintPainelOpcao(2);
-			} else if (ctrCarta.getPossiveisCartas() == 0) {
-				repaintResultado(3);
-				repaintPainelOpcao(1);
-			} else {
-				passo++;
-				repaintMensagem(passo);
-				repaintFileiras();
-			}
+	public void repaintJogo() {
 
-		} else if ("Fileira 3".equals(cmd)) {
-			ctrCarta.reorganizarPacote(2);
+		passo = 1;
+		ctrCarta.inicializarNovoPacote();
+		repaintMensagem(passo);
+		repaintFileiras();
 
-			if (ctrCarta.getPossiveisCartas() == 1) {
-				repaintResultado(0);
-				repaintPainelOpcao(2);
-			} else if (ctrCarta.getPossiveisCartas() == 0) {
-				repaintResultado(3);
-				repaintPainelOpcao(1);
-			} else {
-				passo++;
-				repaintMensagem(passo);
-				repaintFileiras();
-			}
+		painelPrincipal.removeAll();
+		painelPrincipal.add(painelMensagem, BorderLayout.NORTH);
+		painelPrincipal.add(painelCartas, BorderLayout.CENTER);
+		painelPrincipal.repaint();
+		painelPrincipal.validate();
 
-		} else if ("Tentar Novamente".equals(cmd)) {
-			repaintJogo();
+	}
 
-		} else if ("Sair".equals(cmd)) {
-			System.exit(0);
-		} else if ("Sim".equals(cmd)) {
-			repaintResultado(1);
-			repaintPainelOpcao(1);
+	public void repaintMensagem(int passo) {
 
-		} else if ("Não".equals(cmd)) {
-			repaintResultado(2);
-			repaintPainelOpcao(1);
-		} else if ("Iniciar Jogo".equals(cmd)) {
-			repaintJogo();
-		} else if ("Menu Principal".equals(cmd)) {
-			repaintMenu();
-		}
+		painelMensagem.removeAll();
+
+		switch (passo) {
 		
+		case 1:
+			lblMensagem.setText("Memorize uma carta e selecione sua fileira");
+			break;
+			
+		case 2:
+			lblMensagem.setText("Procure-a e selecione sua fileira");
+			break;
+			
+		case 3:
+			lblMensagem.setText("Procure-a novamente e selecione sua fileira");
+			break;
+			
+		default:
+			lblMensagem.setText("Mais uma vez ...");
+			break;
+			
+		}
+
+		painelMensagem.add(lblMensagem);
+		painelMensagem.repaint();
+		painelMensagem.validate();
+
 	}
 
 	public void carregaPaineisFileira() {
@@ -231,26 +219,31 @@ public class ViewJogo implements ActionListener {
 		painelMensagemResultado.remove(lblMensagemResultado);
 
 		switch (tipoMensagem) {
+		
 		case 0:
 			lblMensagemResultado.setText("Esta é a sua carta?");
 			painelImagemCarta.removeAll();
 			painelImagemCarta.add(ctrCarta.getImagemCartaCerta());
 			break;
+			
 		case 1:
 			lblMensagemResultado.setText("\"Suspeitei desde o princípio\" - Chapolin Colorado");
 			painelImagemCarta.removeAll();
 			painelImagemCarta.add(ctrCarta.getImagemQualquer("./images/Acerto.png", 321, 465));
 			break;
+			
 		case 2:
 			lblMensagemResultado.setText("Provavelmente você selecionou a fileira errada em uma das etapas.");
 			painelImagemCarta.removeAll();
 			painelImagemCarta.add(ctrCarta.getImagemQualquer("./images/FileiraErrada.png", 321, 465));
 			break;
-		case 3:
+			
+		case 3:	
 			lblMensagemResultado.setText("Bobos da corte não são bem-vindos. Seja mais sincero da próxima vez!");
 			painelImagemCarta.removeAll();
 			painelImagemCarta.add(ctrCarta.getImagemQualquer("./images/CaminhoErrado.png", 321, 465));
 			break;
+			
 		}
 
 		painelMensagemResultado.add(lblMensagemResultado);
@@ -264,73 +257,22 @@ public class ViewJogo implements ActionListener {
 
 	}
 
-	public void carregaPainelJogo() {
-
-		ctrCarta.inicializarNovoPacote();
-		lblMensagem.setFont(new Font("Arial", Font.BOLD, 28));
-		painelMensagem.add(lblMensagem);
-
-		carregaPaineisFileira();
-
-		painelCartas.add(painelFileira1);
-		painelCartas.add(painelFileira2);
-		painelCartas.add(painelFileira3);
-
-	}
-
-	public void repaintJogo() {
-
-		passo = 1;
-		ctrCarta.inicializarNovoPacote();
-		repaintMensagem(passo);
-		repaintFileiras();
-
-		painelPrincipal.removeAll();
-		painelPrincipal.add(painelMensagem, BorderLayout.NORTH);
-		painelPrincipal.add(painelCartas, BorderLayout.CENTER);
-		painelPrincipal.repaint();
-		painelPrincipal.validate();
-
-	}
-
-	public void repaintMensagem(int passo) {
-
-		painelMensagem.removeAll();
-
-		switch (passo) {
-		case 1:
-			lblMensagem.setText("Memorize uma carta e selecione sua fileira");
-			break;
-		case 2:
-			lblMensagem.setText("Procure-a e selecione sua fileira");
-			break;
-		case 3:
-			lblMensagem.setText("Procure-a novamente e selecione sua fileira");
-			break;
-		default:
-			lblMensagem.setText("Mais uma vez ...");
-			break;
-		}
-
-		painelMensagem.add(lblMensagem);
-		painelMensagem.repaint();
-		painelMensagem.validate();
-
-	}
-
 	public void repaintPainelOpcao(int tipoBotoes) {
 
 		painelOpcao.removeAll();
 
 		switch (tipoBotoes) {
+		
 		case 1:
 			painelOpcao.add(btnTentarNovamente);
 			painelOpcao.add(btnFechar);
 			break;
+			
 		case 2:
 			painelOpcao.add(btnSim);
 			painelOpcao.add(btnNao);
 			break;
+			
 		}
 
 		painelOpcao.repaint();
@@ -339,13 +281,114 @@ public class ViewJogo implements ActionListener {
 	}
 
 	public void repaintMenu() {
-		
+
 		painelPrincipal.removeAll();
 		painelPrincipal.add(ctrCarta.getImagemQualquer("./images/Logo.png", 880, 480), BorderLayout.CENTER);
 		painelPrincipal.add(painelInferior, BorderLayout.SOUTH);
 		painelPrincipal.repaint();
 		painelPrincipal.validate();
-		
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		String cmd = e.getActionCommand();
+
+		if ("Iniciar Jogo".equals(cmd)) {
+			
+			repaintJogo();
+			
+		} else if ("Sair".equals(cmd)) {
+			
+			System.exit(0);
+			
+		} if ("Fileira 1".equals(cmd)) {
+			
+			ctrCarta.reorganizarPacote(0);
+
+			if (ctrCarta.getPossiveisCartas() == 1) {
+				
+				repaintResultado(0);
+				repaintPainelOpcao(2);
+				
+			} else if (ctrCarta.getPossiveisCartas() == 0) {
+				
+				repaintResultado(3);
+				repaintPainelOpcao(1);
+				
+			} else {
+				
+				passo++;
+				repaintMensagem(passo);
+				repaintFileiras();
+				
+			}
+
+		} else if ("Fileira 2".equals(cmd)) {
+			
+			ctrCarta.reorganizarPacote(1);
+
+			if (ctrCarta.getPossiveisCartas() == 1) {
+				
+				repaintResultado(0);
+				repaintPainelOpcao(2);
+				
+			} else if (ctrCarta.getPossiveisCartas() == 0) {
+				
+				repaintResultado(3);
+				repaintPainelOpcao(1);
+				
+			} else {
+				
+				passo++;
+				repaintMensagem(passo);
+				repaintFileiras();
+				
+			}
+
+		} else if ("Fileira 3".equals(cmd)) {
+			
+			ctrCarta.reorganizarPacote(2);
+
+			if (ctrCarta.getPossiveisCartas() == 1) {
+				
+				repaintResultado(0);
+				repaintPainelOpcao(2);
+				
+			} else if (ctrCarta.getPossiveisCartas() == 0) {
+				
+				repaintResultado(3);
+				repaintPainelOpcao(1);
+				
+			} else {
+				
+				passo++;
+				repaintMensagem(passo);
+				repaintFileiras();
+				
+			}
+			
+		} else if ("Sim".equals(cmd)) {
+			
+			repaintResultado(1);
+			repaintPainelOpcao(1);
+
+		} else if ("Não".equals(cmd)) {
+			
+			repaintResultado(2);
+			repaintPainelOpcao(1);
+			
+		} else if ("Menu Principal".equals(cmd)) {
+			
+			repaintMenu();
+			
+		} else if ("Tentar Novamente".equals(cmd)) {
+			
+			repaintJogo();
+			
+		}
+
 	}
 
 }
